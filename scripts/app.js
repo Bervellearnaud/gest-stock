@@ -358,28 +358,40 @@ formUtilisateur.addEventListener("submit", (e) => {
   }
 
   const users = getUsers();
-  if (id) {
-    const userOriginal = users.find((u) => u.id === id);
-    if (!userOriginal) {
-      alert("Utilisateur introuvable.");
-      return;
-    }
 
-    if (userOriginal.username === sessionUser.username) {
+  // Vérifier si le nom d'utilisateur est déjà pris (pour ajout ou modification)
+  if (users.some(u => u.username === username && u.id !== id)) {
+    alert("Ce nom d'utilisateur est déjà pris.");
+    return;
+  }
+
+  if (id) {
+    // Modification utilisateur (non autorisée pour soi-même)
+    if (id === sessionUser.id) {
       alert("Vous ne pouvez pas modifier votre propre compte ici.");
       return;
     }
-
-    if (users.some((u) => u.username === username && u.id !== id)) {
-      alert("Ce nom d'utilisateur est déjà pris.");
-      return;
-    }
-
+    // Mettre à jour l'utilisateur
     const updatedUser = {
       id,
       username,
-      password: password ? password : userOriginal.password,
-      role,
+      password: password ? password : users.find(u => u.id === id).password,
+      role
     };
+    updateUser(updatedUser);
+    alert("Utilisateur modifié avec succès.");
+  } else {
+    // Ajout nouvel utilisateur
+    const newUser = {
+      id: generateId(),
+      username,
+      password,
+      role
+    };
+    addUser(newUser);
+    alert("Utilisateur ajouté avec succès.");
   }
+
+  afficherUtilisateurs();
+  resetFormulaireUtilisateur();
 });
