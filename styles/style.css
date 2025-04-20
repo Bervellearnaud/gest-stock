@@ -1,0 +1,27 @@
+/* Ici, vous pouvez ajouter des styles CSS personnalisés qui ne sont pas couverts par Tailwind.
+   Cependant, l'objectif est de minimiser l'utilisation de CSS personnalisé et de s'appuyer
+   autant que possible sur les classes utilitaires de Tailwind. */
+
+/* Exemple: surcharge d'un style Tailwind existant */
+.table-auto {
+  width: 100%; /* S'assure que la table prend toute la largeur disponible */
+  border-collapse: collapse; /* Fusionne les bordures des cellules */
+}
+
+.table-auto th,
+.table-auto td {
+  border: 1px solid #ddd; /* Ajoute une bordure légère aux cellules */
+  padding: 8px; /* Ajoute un peu d'espace autour du contenu des cellules */
+  text-align: left; /* Alignement du texte à gauche par défaut */
+}
+
+/* Styles pour les états de quantité (peuvent être combinés avec Tailwind) */
+.quantite-epuise {
+  background-color: #ff4d4d; /* Rouge pour quantité épuisée */
+  color: white; /* Texte blanc pour contraste */
+}
+
+.quantite-faible {
+  background-color: #ffcc66; /* Jaune pour quantité faible */
+  color: black; /* Texte noir pour contraste */
+}

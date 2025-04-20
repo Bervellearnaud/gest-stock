@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gestion de Stock</title>
+    <!-- Inclure Tailwind CSS via CDN -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <!-- Inclure Material Icons via CDN -->
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body class="bg-gray-100">
+    <main class="container mx-auto mt-5 p-5 bg-white shadow-md rounded-md">
+      <!-- Logo -->
+      <div class="flex justify-center mb-8">
+        <img
+          src="assets/images/logo.png"
+          alt="Logo de l'application"
+          class="h-20"
+        />
+      </div>
+
+      <!-- Section de connexion -->
+      <section id="connexion-section" class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4">Connexion</h2>
+        <form id="formConnexion" class="space-y-4">
+          <div>
+            <label
+              for="username"
+              class="block text-gray-700 text-sm font-bold mb-2"
+              >Utilisateur</label
+            >
+            <input
+              type="text"
+              id="username"
+              class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              placeholder="Nom d'utilisateur"
+            />
+          </div>
+          <div>
+            <label
+              for="password"
+              class="block text-gray-700 text-sm font-bold mb-2"
+              >Mot de passe</label
+            >
+            <input
+              type="password"
+              id="password"
+              class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              placeholder="Mot de passe"
+            />
+          </div>
+          <div>
+            <label for="role" class="block text-gray-700 text-sm font-bold mb-2"
+              >Rôle</label
+            >
+            <select
+              id="role"
+              class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            >
+              <option value="utilisateur">Utilisateur</option>
+              <option value="admin">Administrateur</option>
+            </select>
+          </div>
+          <button
+            type="submit"
+            class="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+          >
+            Se connecter
+          </button>
+          <p id="messageErreur" class="text-red-500"></p>
+        </form>
+      </section>
+
+      <!-- Section dashboard (cachée par défaut) -->
+      <section id="dashboard-section" class="hidden">
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <h2 class="text-2xl font-semibold">
+              Bienvenue,
+              <span id="nomUtilisateur" class="font-bold"></span> (<span
+                id="roleUtilisateur"
+                class="font-medium"
+              ></span
+              >)
+            </h2>
+          </div>
+          <button
+            id="btnDeconnexion"
+            class="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+          >
+            Déconnexion
+          </button>
+        </div>
+
+        <!-- Options de tri et recherche -->
+        <div class="flex items-center space-x-4 mb-4">
+          <div>
+            <label
+              for="selectTri"
+              class="block text-gray-700 text-sm font-bold mb-2"
+              >Trier par</label
+            >
+            <select
+              id="selectTri"
+              class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            >
+              <option value="nom">Nom</option>
+              <option value="quantite">Quantité</option>
+              <option value="dateAjout">Date d'ajout</option>
+              <option value="fournisseur">Fournisseur</option>
+            </select>
+          </div>
+          <div class="flex-grow">
+            <label
+              for="inputRecherche"
+              class="block text-gray-700 text-sm font-bold mb-2"
+              >Rechercher</label
+            >
+            <input
+              type="text"
+              id="inputRecherche"
+              class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              placeholder="Rechercher un article"
+            />
+          </div>
+        </div>
+
+        <!-- Liste des articles -->
+        <h3 class="text-xl font-semibold mb-2">Liste des articles</h3>
+        <div class="overflow-x-auto">
+          <table id="tableArticles" class="table-auto w-full">
+            <thead class="bg-gray-200">
+              <tr>
+                <th class="px-4 py-2">Nom</th>
+                <th class="px-4 py-2">Quantité</th>
+                <th class="px-4 py-2">Fournisseur</th>
+                <th class="px-4 py-2">Date d'ajout</th>
+                <th class="px-4 py-2">Auteur</th>
+                <th class="px-4 py-2">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Les lignes d'articles seront ajoutées ici par JavaScript -->
+            </tbody>
+          </table>
+        </div>
+        <!-- Pagination -->
+        <div id="pagination" class="mt-4 flex justify-center space-x-2">
+          <!-- Les boutons de pagination seront ajoutés ici par JavaScript -->
+        </div>
+        <!-- Ajout d'article -->
+        <h3 class="text-xl font-semibold mt-6 mb-2" id="formTitle">
+          Ajouter un article
+        </h3>
+        <form id="formArticle" class="space-y-4">
+          <input type="hidden" id="articleId" />
+          <div>
+            <label
+              for="nomArticle"
+              class="block text-gray-700 text-sm font-bold mb-2"
+              >Nom</label
+            >
+            <input
+              type="text"
+              id="nomArticle"
+              class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              placeholder="Nom de l'article"
+            />
+          </div>
+          <div>
+            <label
+              for="quantiteArticle"
+              class="block text-gray-700 text-sm font-bold mb-2"
+              >Quantité</label
+            >
+            <input
+              type="number"
+              id="quantiteArticle"
+              class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              placeholder="Quantité"
+            />
+          </div>
+          <div>
+            <label
+              for="fournisseurArticle"
+              class="block text-gray-700 text-sm font-bold mb-2"
+              >Fournisseur</label
+            >
+            <input
+              type="text"
+              id="fournisseurArticle"
+              class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              placeholder="Fournisseur"
+            />
+          </div>
+          <div class="flex justify-start space-x-4">
+            <button
+              type="submit"
+              class="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            >
+              Ajouter
+            </button>
+            <button
+              type="button"
+              id="btnAnnuler"
+              class="bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline hidden"
+            >
+              Annuler
+            </button>
+          </div>
+        </form>
+
+        <!-- Section de gestion des utilisateurs (cachée par défaut) -->
+        <section id="gestion-utilisateurs" class="mt-8 hidden">
+          <h3 class="text-xl font-semibold mb-2">Gestion des utilisateurs</h3>
+          <div class="overflow-x-auto">
+            <table id="tableUtilisateurs" class="table-auto w-full">
+              <thead class="bg-gray-200">
+                <tr>
+                  <th class="px-4 py-2">Nom d'utilisateur</th>
+                  <th class="px-4 py-2">Rôle</th>
+                  <th class="px-4 py-2">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Les lignes d'utilisateurs seront ajoutées ici par JavaScript -->
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Ajout d'utilisateur -->
+          <h3 class="text-xl font-semibold mt-6 mb-2" id="formUserTitle">
+            Ajouter un utilisateur
+          </h3>
+          <form id="formUtilisateur" class="space-y-4">
+            <input type="hidden" id="userId" />
+            <div>
+              <label
+                for="usernameUser"
+                class="block text-gray-700 text-sm font-bold mb-2"
+                >Nom d'utilisateur</label
+              >
+              <input
+                type="text"
+                id="usernameUser"
+                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                placeholder="Nom d'utilisateur"
+              />
+            </div>
+            <div>
+              <label
+                for="passwordUser"
+                class="block text-gray-700 text-sm font-bold mb-2"
+                >Mot de passe</label
+              >
+              <input
+                type="password"
+                id="passwordUser"
+                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                placeholder="Mot de passe"
+              />
+            </div>
+            <div>
+              <label
+                for="roleUser"
+                class="block text-gray-700 text-sm font-bold mb-2"
+                >Rôle</label
+              >
+              <select
+                id="roleUser"
+                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              >
+                <option value="">-- Sélectionner un rôle --</option>
+                <option value="utilisateur">Utilisateur</option>
+                <option value="admin">Administrateur</option>
+              </select>
+            </div>
+            <div class="flex justify-start space-x-4">
+              <button
+                type="submit"
+                class="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+              >
+                Ajouter
+              </button>
+              <button
+                type="button"
+                id="btnAnnulerUser"
+                class="bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline hidden"
+              >
+                Annuler
+              </button>
+            </div>
+          </form>
+        </section>
+      </section>
+
+      <!-- Footer -->
+      <footer class="bg-gray-200 text-center py-4">
+        <p>&copy; 2025 Gestion de Stock</p>
+      </footer>
+    </main>
+    <script src="scripts/storageUsers.js"></script>
+    <script src="scripts/storage.js"></script>
+    <script src="scripts/auth.js"></script>
+    <script src="scripts/app.js"></script>
+  </body>
+</html>
